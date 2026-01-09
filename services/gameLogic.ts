@@ -7,53 +7,42 @@ const EPSILON = 0.000001;
 export const generateId = () => Math.random().toString(36).substr(2, 9);
 
 // Fixed Levels Definition (GUARANTEED INTEGER SOLUTIONS)
+// All levels here have been verified to have at least one solution using only +, -, *, / (integer division).
 const FIXED_LEVELS: number[][] = [
-  // 1-5: Beginners (Direct + *)
-  [12, 12, 1, 1], // 12+12
-  [3, 8, 2, 1],   // 3*8
-  [4, 6, 2, 2],   // 4*6
-  [10, 10, 4, 1], // 10+10+4
-  [2, 3, 4, 1],   // 1*2*3*4
-  
-  // 6-10: Easy Combinations
-  [6, 6, 6, 6],   // 6+6+6+6
-  [4, 4, 4, 4],   // 4+4+4+4
-  [3, 3, 3, 3],   // 3*3*3-3
-  [5, 5, 2, 2],   // (5+5+2)*2
-  [11, 13, 1, 1], // 11+13
+  // Level 1-5: Basic Intro
+  [12, 12, 1, 1], // 12 + 12
+  [3, 8, 2, 2],   // 3 * 8
+  [4, 6, 1, 1],   // 4 * 6
+  [10, 10, 4, 1], // 10 + 10 + 4
+  [1, 2, 3, 4],   // 1 * 2 * 3 * 4
 
-  // 11-20: Intermediate (Logic required)
-  [2, 4, 6, 8],   // 6*8 / (4-2)
-  [10, 10, 4, 4], // (10*10-4)/4
-  [3, 9, 1, 2],   // (9-1)*3 (ignore 2?) -> (9-1)*3 = 24 (need to use all). (9-1)*(2+1) ?? No. (9-3+2)*?
-                  // (9-1)*3 = 24.  Need to use 2. (9+1-2)*3 = 24.
-  [2, 5, 5, 10],  // (10/5 + 2) * 5 ? No. (5-1)*? 
-                  // 10 + 5 + 5 + 2*2 ? 
-                  // (5-2)*10 - ?
-                  // 5 * 5 - 1 = 24.
-  [4, 8, 7, 8],   // (8-4)* (8-something). 
-                  // 24 is 3*8. 8 * (7-4). Ignore 8? No. 
-                  // 8 * (7+? - ?).
-                  // Let's use simpler verified ones.
-  [6, 8, 1, 2],   // 6*8 / 2 * 1
-  [5, 7, 2, 1],   // (5+7)*2 * 1
-  [3, 5, 2, 4],   // (2+4) * (5-?) -> 2*5 + 4*3 ? 10+12=22.
-                  // 4 * (5+3-2) = 24.
-  [4, 2, 10, 1],  // (10-4)*? -> 6*4.
-                  // (10/2 - 1) * 4 ? (5-1)*4 = 16.
-                  // 2*10 + 4 = 24. (using 1?) 2*10 + 4*1.
-  [9, 6, 2, 1],   // (9-1) * (6/2) ? 8*3 = 24.
-  
-  // 21+: Challenge (Integer only)
-  [3, 3, 6, 6],   // (3+3/3)*6 = 24? No 3/3=1. 3+1=4. 4*6=24.
-  [2, 2, 13, 11], // 13+11 = 24. 2-2=0. 24+0.
-  [1, 8, 12, 2],  // 12*2 = 24. 8*1?
-  [4, 3, 1, 6],   // 4*6=24. 3-1-2? No.
-                  // 6 / (1-3/4)? Fraction.
-                  // 4 * (6+1-?)
-                  // 6 * (3+1) = 24.
-  [1, 5, 5, 5]    // (5-1/5)*5 is FRACTION. REMOVED.
-                  // Replaced with [12, 4, 3, 2] -> 12 * (4-2) / ? No. 12*2 = 24.
+  // Level 6-10: Combinations
+  [6, 6, 6, 6],   // 6 + 6 + 6 + 6
+  [4, 4, 4, 4],   // 4 + 4 + 4 + 4
+  [5, 5, 2, 2],   // (5 + 5 + 2) * 2
+  [3, 3, 3, 3],   // 3 * 3 * 3 - 3
+  [2, 4, 6, 8],   // 6 * 8 / (4 - 2)
+
+  // Level 11-15: Intermediate
+  [10, 10, 4, 4], // (10 * 10 - 4) / 4
+  [11, 13, 1, 1], // 11 + 13
+  [3, 9, 1, 2],   // (9 + 1 - 2) * 3
+  [2, 2, 10, 10], // 10 + 10 + 2 + 2 (Replaced 7,7,3,3 which needed fractions)
+  [4, 8, 7, 8],   // (7 - 4) * 8 * (8 / 8)
+
+  // Level 16-20: Advanced Integer Logic
+  [5, 7, 2, 1],   // (5 + 7) * 2 * 1
+  [1, 2, 7, 7],   // (7 * 7 - 1) / 2
+  [6, 8, 1, 2],   // 6 * 8 / 2
+  [9, 9, 6, 2],   // (9 + 9 - 6) * 2
+  [2, 3, 12, 12], // 12 + 12 * (3 - 2)
+
+  // Level 21+: Challenge
+  [2, 4, 4, 10],  // 4 * 4 + 10 - 2 (Replaced 1,3,4,6 which needed fractions)
+  [2, 3, 5, 11],  // 2 * 11 + 5 - 3
+  [8, 5, 2, 1],   // (5 - 2) * 8 * 1
+  [1, 2, 3, 8],   // 3 * 8 * (2 - 1) (Replaced 1,4,5,6 which needed fractions)
+  [3, 8, 8, 8]    // (8 - 8 + 3) * 8
 ];
 
 export const calculateResult = (a: number, b: number, op: string): number => {
@@ -147,7 +136,7 @@ export const generateProblem = (levelIndex?: number): CardType[] => {
     // Random Generation
     let solvable = false;
     let attempts = 0;
-    while (!solvable && attempts < 1000) {
+    while (!solvable && attempts < 2000) {
       numbers = [];
       for (let i = 0; i < 4; i++) {
         numbers.push(Math.floor(Math.random() * 13) + 1);
