@@ -330,7 +330,7 @@ function App() {
     <div className="flex flex-col h-[100dvh] items-center justify-center p-4 space-y-4 bg-gray-50 text-gray-800 relative overflow-hidden">
       <div className="text-center space-y-1 mb-2">
         <h1 className="text-4xl font-bold tracking-tighter text-indigo-600">24点</h1>
-        <p className="text-gray-500 font-light text-lg tracking-widest">极简大师</p>
+        <p className="text-gray-500 font-light text-lg tracking-widest">算数大师</p>
       </div>
 
       <div className="w-full max-w-xs space-y-3">
